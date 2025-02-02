@@ -5,7 +5,7 @@ import inspect
 
 class _ZOZOCMetaclass(type):
 
-    rounding: int = 3
+    rounding: int = 5
     test_vectorization: bool = False,
     test_values = np.linspace(0, 1, 101)
 
@@ -13,9 +13,14 @@ class _ZOZOCMetaclass(type):
         if not (
             isinstance(func, Callable)
             and len(inspect.signature(func).parameters.keys()) == 1
-            and round(func(0), _ZOZOCMetaclass.rounding) == 0
-            and round(func(1), _ZOZOCMetaclass.rounding) == 1
         ):
+            return False
+        f0 = func(0.)
+        f1 = func(1.)
+        if isinstance(f0, np.ndarray):
+            f0 = float(f0)
+            f1 = float(f1)
+        if not (round(f0, _ZOZOCMetaclass.rounding) == 0 and round(f1, _ZOZOCMetaclass.rounding) == 1):
             return False
         if _ZOZOCMetaclass.test_vectorization:
             outputs = func(_ZOZOCMetaclass.test_values)
@@ -23,7 +28,7 @@ class _ZOZOCMetaclass(type):
                 return False
             return np.all(0 <= np.round(outputs, _ZOZOCMetaclass.rounding) <= 1)
         else:
-            return all(0 <= round(func(t), _ZOZOCMetaclass.rounding) <= 1 for t in _ZOZOCMetaclass.test_values)
+            return all(0 <= round(float(func(t)), _ZOZOCMetaclass.rounding) <= 1 for t in _ZOZOCMetaclass.test_values)
 
 class ZOZOCallable(metaclass=_ZOZOCMetaclass):
     """
@@ -34,7 +39,7 @@ class ZOZOCallable(metaclass=_ZOZOCMetaclass):
 
     def __call__(self, x: float) -> float: ...
 
-def verify_ZOZOCallable(ZOC, rounding: int=3, test_vectorizaiton: bool = False, points: int = 101):
+def verify_ZOZOCallable(ZOC, rounding: int=5, test_vectorizaiton: bool = False, points: int = 101):
     """Verify if the provided function is a ZOCallable."""
     _ZOZOCMetaclass.rounding = rounding
     _ZOZOCMetaclass.test_vectorization = test_vectorizaiton

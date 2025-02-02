@@ -1,18 +1,24 @@
 """The module ZOCallable the defintion of the ZOCallable class, used to type functions. ZO stands for Zero-One."""
 from typing import Callable
 import inspect
+import numpy as np
 
 class _ZOCMetaclass(type):
 
-    rounding: int = 3
+    rounding: int = 5
 
     def __instancecheck__(self, func) -> bool:
-        return (
+        if not (
             isinstance(func, Callable)
             and len(inspect.signature(func).parameters.keys()) == 1
-            and round(func(0), _ZOCMetaclass.rounding) == 0
-            and round(func(1), _ZOCMetaclass.rounding) == 1
-        )
+        ):
+            return False
+        f0 = func(0.)
+        f1 = func(1.)
+        if isinstance(f0, np.ndarray):
+            f0 = float(f0)
+            f1 = float(f1)
+        return round(f0, _ZOCMetaclass.rounding) == 0 and round(f1, _ZOCMetaclass.rounding) == 1
 
 class ZOCallable(metaclass=_ZOCMetaclass):
     """
@@ -28,8 +34,18 @@ def verify_ZOCallable(ZOC, rounding: int=5):
     _ZOCMetaclass.rounding = rounding
     return isinstance(ZOC, ZOCallable)
 
+def verify_step_by_step(ZOC):
+    print(isinstance(ZOC, Callable))
+    print(list(inspect.signature(ZOC).parameters.keys()))
+    print(ZOC(0))
+    print(ZOC(1))
+
 def normalize_ZOCallable(unnormalized_callable: Callable[[float], float]):
     """Normalize a function to be a ZOCCallable."""
     if unnormalized_callable(1) == 0:
         raise ValueError("This function cannot be normalized as a ZOCallable.")
     return lambda t: (unnormalized_callable(t) - unnormalized_callable(0)) / unnormalized_callable(1)
+
+def vectorize_ZOCallable(unvectorized_ZOC: Callable[[float], float]):
+    vectorized_ZOC = np.vectorize(unvectorized_ZOC)
+    return lambda x: vectorized_ZOC(x)
