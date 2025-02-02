@@ -38,3 +38,26 @@ class TestZOCallable(unittest.TestCase):
         self.assertFalse(verify_ZOZOCallable(func, 3), "1 shouldn't be a ZOZOCallable as it is not a Callable.")
         func = lambda x,y: x + y
         self.assertFalse(verify_ZOZOCallable(func, 3), "lambda x,y: x + y shouldn't be a ZOZOCallable as it has 2 parameters.")
+
+    def test_functions(self):
+
+        from ZOCallable.functions import linear, square_in, square_in_out, square_out, root_in, root_out
+        funcs = [linear, square_in, square_out, square_in_out, root_in, root_out]
+        for i, func in enumerate(funcs):
+            self.assertTrue(verify_ZOCallable(func, 3), f"The {i+1}-th function of the basic list should be a ZOCallable.")
+            self.assertTrue(verify_ZOZOCallable(func, 3), f"The {i+1}-th function of the basic list should be a ZOCallable.")
+        from ZOCallable.functions import power_in, power_in_out, power_out
+        funcs = sum([[power_in(i), power_out(i), power_in_out(i)] for i in range(3, 8)], [])
+        for i, func in enumerate(funcs):
+            self.assertTrue(verify_ZOCallable(func, 3), f"The power_{i%3}({i//3 + 3} function should be a ZOCallable.")
+            self.assertTrue(verify_ZOZOCallable(func, 3), f"The power_{i%3}({i//3 + 3} function should be a ZOCallable.")
+        from ZOCallable.functions import ease, ease_in, ease_in_out, ease_out
+        funcs = [ease, ease_in, ease_in_out, ease_out]
+        for i, func in enumerate(funcs):
+            self.assertTrue(verify_ZOCallable(func, 3), f"The {i+1}-th function of the ease list should be a ZOCallable.")
+            self.assertTrue(verify_ZOZOCallable(func, 3), f"The {i+1}-th function of the ease list should be a ZOCallable.")
+        from ZOCallable.functions import jump, bounce
+        funcs = sum([[jump(i), bounce(i)] for i in range(3, 8)], [])
+        for i, func in enumerate(funcs):
+            self.assertTrue(verify_ZOCallable(func, 3), f"The special{i%2}({i//2} function should be a ZOCallable.")
+            self.assertTrue(verify_ZOZOCallable(func, 3), f"The special{i%2}({i//2} function should be a ZOCallable.") 
