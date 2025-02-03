@@ -75,6 +75,7 @@ class TestZOCallable(unittest.TestCase):
 
     def test_metaclass(self):
         self.assertTrue(issubclass(ZOZOCallable, ZOCallable), "ZOZOCallable should be a subclass of ZOCallble.")
+        self.assertFalse(issubclass(ZOCallable, ZOZOCallable), "ZOCallable shouldn't be a subclass of ZOZOCallable.")
         self.assertTrue(issubclass(ZOCallable, Callable), "ZOallable should be a subclass of Callable.")
         self.assertTrue(issubclass(ZOZOCallable, Callable), "ZOZOCallable should be a subclass of ZOCallble.")
         self.assertFalse(issubclass(int, ZOCallable), "int shouldn't be a subclass of ZOCallable.")

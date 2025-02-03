@@ -43,25 +43,21 @@ class _ZOCMetaclass(type):
         else:
             # If we don't care about vectorization, we still test the range of the function.
             return all(0 <= round(float(func(t)), _ZOCMetaclass.rounding) <= 1 for t in _ZOCMetaclass.test_values)
-    
-    def __subclasscheck__(cls, subcls):
-        # Return True if we ask if ZOZOCallable is a subclass of ZOCallable, that's it.
-        return cls is ZOCallable and subcls is ZOZOCallable
-
-class ZOZOCallable(metaclass=_ZOCMetaclass):
-    """
-    The ZOZOCallable isn't meant to be instanciated.
-    This class is only a type hint for functions f with
-    f(0) = 0, f(1) = 1 and f : [0, 1] -> [0, 1].
-    """
-
-    def __call__(self, x: float) -> float: ...
 
 class ZOCallable(metaclass=_ZOCMetaclass):
     """
     The ZOCallable isn't meant to be instanciated.
     This class is only a type hint for functions f with
     f(0) = 0, f(1) = 1 and f : [0, 1] -> R.
+    """
+
+    def __call__(self, x: float) -> float: ...
+
+class ZOZOCallable(ZOCallable, metaclass=_ZOCMetaclass):
+    """
+    The ZOZOCallable isn't meant to be instanciated.
+    This class is only a type hint for functions f with
+    f(0) = 0, f(1) = 1 and f : [0, 1] -> [0, 1].
     """
 
     def __call__(self, x: float) -> float: ...
