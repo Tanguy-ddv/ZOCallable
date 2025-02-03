@@ -30,9 +30,15 @@ def cubic_bezier(x1, y1, x2, y2, precision: float = 2**(-8)) -> ZOCallable:
     Params:
     ----
     - x1, y1, x2, y2: float, The control points of the bezier curve, with the end and start points at (0, 0) and (1, 1).
+    x1 and x2 must be in [0, 1], for the cubic_bezier to be a ZOZOCallable, y1 and y2 must be in [0, 1], otherwise the 
+    returned function is only a ZOCallable
     The bezier curve is created following css notations, and can be explored here https://cubic-bezier.com
     - precision: float << 1, used to approximate (see warning below)
 
+    Returns:
+    ----
+    - ease: ZOCallable, the function y(x) following the bezier curve.
+    
     Examples:
     ---
     ```python
