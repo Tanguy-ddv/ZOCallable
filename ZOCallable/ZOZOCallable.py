@@ -30,7 +30,7 @@ class _ZOZOCMetaclass(type):
             except ValueError:
                 return False # We need to be sure the output is a float
          # The function must satisfy f(0) = 0 and f(1) = 1, it checkes also if the output is a number.
-        if not round(f0, _ZOZOCMetaclass.rounding) == 0 and round(f1, _ZOZOCMetaclass.rounding) == 1:
+        if not (round(f0, _ZOZOCMetaclass.rounding) == 0 and round(f1, _ZOZOCMetaclass.rounding) == 1):
             return False
         if _ZOZOCMetaclass.test_vectorization: # If we test the vectorization, we verify the output is an array of float
             outputs = func(_ZOZOCMetaclass.test_values)
