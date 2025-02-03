@@ -41,10 +41,10 @@ def cubic_bezier(x1, y1, x2, y2, precision: float = 2**(-8)) -> ZOCallable:
     Examples:
     ---
     ```python
-    ease = cubic_bezier(0.25, 1., 0.25, 1.)
-    ease_in = cubic_bezier(0.12, 0, 0.39, 0)
-    ease_out = cubic_bezier(0.61, 1, 0.88, 1)
-    ease_in_out = cubic_bezier(0.37, 0, 0.63, 1)
+    ease = cubic_bezier(0.25, 0.1, 0.25, 1.)
+    ease_in = cubic_bezier(0.42, 0., 1, 1.)
+    ease_out = cubic_bezier(0., 0., 0.58, 1.)
+    ease_in_out = cubic_bezier(0.42, 0., 0.58, 1.)
     ```
     these functions are already defined in the same module.
     
@@ -88,10 +88,10 @@ def cubic_bezier(x1, y1, x2, y2, precision: float = 2**(-8)) -> ZOCallable:
     
     return vectorize_ZOCallable(find_y)
 
-ease = cubic_bezier(0.25, 1., 0.25, 1.)
-ease_in = cubic_bezier(0.12, 0, 0.39, 0)
-ease_out = cubic_bezier(0.61, 1, 0.88, 1)
-ease_in_out = cubic_bezier(0.37, 0, 0.63, 1)
+ease = cubic_bezier(0.25, 0.1, 0.25, 1.)
+ease_in = cubic_bezier(0.42, 0., 1, 1.)
+ease_out = cubic_bezier(0., 0., 0.58, 1.)
+ease_in_out = cubic_bezier(0.42, 0., 0.58, 1.)
 
 def bounce_out(n: int) -> ZOZOCallable:
     """
