@@ -10,47 +10,63 @@ from typing import Sequence
 from ZOCallable.ZOCallable import ZOCallable
 from ZOCallable.ZOZOCallable import ZOZOCallable
 
-def plot_ZOCallable(func: ZOCallable | Sequence[ZOZOCallable], vectorized = True):
-    """Plot one or mulitple ZOCallable to visualize."""
-    plt.figure()
-    plt.hlines([0, 1], 0, 1, colors='k', linestyles='--')
-    plt.plot([0, 1], [0, 1], c='#aaa', linestyle='--')
-    plt.scatter([0, 1], [0, 1], marker='o')
-    x = np.linspace(0, 1, 101)
-    if isinstance(func, Sequence):
-        for f in func:
-            if vectorized:
-                plt.plot(x, f(x))
-            else:
-                plt.plot(x, [f(t) for t in x])
-    else:
-        if vectorized:
-            plt.plot(x, func(x))
-        else:
-            plt.plot(x, [func(t) for t in x])
-    plt.grid()
-    plt.xlim(-0.05, 1.05)
-    plt.show()
+def plot_ZOCallable(*func: tuple[ZOCallable], vectorized = True, save_path: str = ""):
+    """
+    Plot one or mulitple ZOCallable to visualize.
+    
+    Params:
+    ----
+    - func: ZOCallable, the functions to plot.
+    - vectorized: bool, specify whether the functions are vectorized or not.
+    - save_path: str = "", if specified, the plot isn't showed but saved
 
-def plot_ZOZOCallable(func: ZOZOCallable | Sequence[ZOZOCallable], vectorized = True):
-    """Plot one or mulitple ZOZOCallable to visualize."""
+    The functions are plotted for x from 0 to 1, y = 0, y = 1 and x = y are plotted in the background.
+    """
     plt.figure()
     plt.hlines([0, 1], 0, 1, colors='k', linestyles='--')
     plt.plot([0, 1], [0, 1], c='#aaa', linestyle='--')
     plt.scatter([0, 1], [0, 1], marker='o')
     x = np.linspace(0, 1, 101)
-    if isinstance(func, Sequence):
-        for f in func:
-            if vectorized:
-                plt.plot(x, f(x))
-            else:
-                plt.plot(x, [f(t) for t in x])
-    else:
+    for f in func:
         if vectorized:
-            plt.plot(x, func(x))
+            plt.plot(x, f(x))
         else:
-            plt.plot(x, [func(t) for t in x])
+            plt.plot(x, [f(t) for t in x])
     plt.grid()
-    plt.xlim(-0.05, 1.05)
-    plt.ylim(-0.05, 1.05)
-    plt.show()
+    plt.xlim(-0.01, 1.01)
+    if save_path:
+        plt.savefig(save_path)
+    else:
+        plt.show()
+
+def plot_ZOZOCallable(func: ZOZOCallable | Sequence[ZOZOCallable], vectorized = True, save_path: str = ""):
+    """
+    Plot one or mulitple ZOZOCallable to visualize.
+    
+    Params:
+    ----
+    - func: ZOCallable, the functions to plot.
+    - vectorized: bool, specify whether the functions are vectorized or not.
+    - save_path: str = "", if specified, the plot isn't showed but saved
+
+
+    The functions are plotted for x from 0 to 1, y = 0, y = 1 and x = y are plotted in the background.
+    As ZOZOCallables should range in [0, 1], the ylim is fixed to [0, 1].
+    """
+    plt.figure()
+    plt.hlines([0, 1], 0, 1, colors='k', linestyles='--')
+    plt.plot([0, 1], [0, 1], c='#aaa', linestyle='--')
+    plt.scatter([0, 1], [0, 1], marker='o')
+    x = np.linspace(0, 1, 101)
+    for f in func:
+        if vectorized:
+            plt.plot(x, f(x))
+        else:
+            plt.plot(x, [f(t) for t in x])
+    plt.grid()
+    plt.xlim(-0.01, 1.01)
+    plt.ylim(-0.01, 1.01)
+    if save_path:
+        plt.savefig(save_path)
+    else:
+        plt.show()

@@ -9,5 +9,6 @@ ZOCallable contains two classes:
 For both cases, a function called `verify_ZO(ZO)Callable` can be used to verify is another function is a ZO(ZO)Callable.
 Multiple functions are defined in the submodule _ZOCallable.functions_, most of them are ZOZOCallables, all of them are ZOCallables. 
 """
-from .ZOCallable import ZOCallable, verify_ZOCallable, normalize_ZOCallable, vectorize_ZOCallable
-from .ZOZOCallable import ZOZOCallable, verify_ZOZOCallable
+from ZOCallable.ZOCallable import ZOCallable, verify_ZOCallable, normalize_ZOCallable, vectorize_ZOCallable
+from ZOCallable.ZOZOCallable import ZOZOCallable, verify_ZOZOCallable
+from ZOCallable import functions, plot

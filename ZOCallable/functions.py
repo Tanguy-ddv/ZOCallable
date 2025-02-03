@@ -6,12 +6,15 @@ from .ZOZOCallable import ZOZOCallable
 linear = lambda x:x
 
 def power_in(n) -> ZOZOCallable:
+    """Power_in functions are the polynomial functions f(x) = x^n."""
     return lambda x: np.pow(x, n)
 
 def power_out(n) -> ZOZOCallable:
+    """Power_out functions are the polynomial functions f(x) = 1 - (1-x)^n."""
     return lambda x: 1 - np.pow(1 - x, n)
 
 def power_in_out(n) -> ZOZOCallable:
+    """Power_out functions are a combination of a power_in for x < 0.5 and power_out for x > 0.5."""
     return vectorize_ZOCallable(lambda x: (2**(n-1)) *np.pow(x, n) if x < 0.5 else 1 - np.pow(1 - x, n)*(2**(n-1)))
 
 square_in = power_in(2)
@@ -25,7 +28,27 @@ def cubic_bezier(x1, y1, x2, y2, precision: float = 2**(-8)) -> ZOCallable:
     Return a ZOCallable following a cubic bezier curve.
     
     Params:
-    - p0, p1, p2, p3: floats, 0 <= p <= 1. The parameters of the curve.
+    ----
+    - x1, y1, x2, y2: float, The control points of the bezier curve, with the end and start points at (0, 0) and (1, 1).
+    The bezier curve is created following css notations, and can be explored here https://cubic-bezier.com
+    - precision: float << 1, used to approximate (see warning below)
+
+    Examples:
+    ---
+    ```python
+    ease = cubic_bezier(0.25, 1., 0.25, 1.)
+    ease_in = cubic_bezier(0.12, 0, 0.39, 0)
+    ease_out = cubic_bezier(0.61, 1, 0.88, 1)
+    ease_in_out = cubic_bezier(0.37, 0, 0.63, 1)
+    ```
+    these functions are already defined in the same module.
+    
+
+    Warning:
+    ---
+    As bezier curves are parametric (i.e. defined as (x(t), y(t)) with t in [0, 1]) and as there is no mathematical
+    formula for y(x), it is approach via a dichotomy method, with a given precision. Thus, for a very smooth curve,
+    it is adviced to a high precision. For most applications, 2^(-8) is precise enough. 
     """
 
     x0 = 0
@@ -69,6 +92,10 @@ def bounce_out(n: int) -> ZOZOCallable:
     Params:
     ---
     - n: int >= 0, the number of bounces.
+
+    Raises:
+    ----
+    ValueError, if n < 0.
     """
     if n < 0 or not isinstance(n, int):
         raise ValueError(f"{n} is not an acceptable argument for the number of bounce.")
@@ -88,6 +115,10 @@ def bounce_in(n: int):
     Params:
     ---
     - n: int >= 0, the number of bounces.
+
+    Raises:
+    ----
+    ValueError, if n < 0.
     """
 
     bounce_in_n = bounce_out(n)
