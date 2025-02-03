@@ -62,9 +62,9 @@ ease_in = cubic_bezier(0.12, 0, 0.39, 0)
 ease_out = cubic_bezier(0.61, 1, 0.88, 1)
 ease_in_out = cubic_bezier(0.37, 0, 0.63, 1)
 
-def bounce(n: int) -> ZOZOCallable:
+def bounce_out(n: int) -> ZOZOCallable:
     """
-    Return a ZOCallable that looks like bounces.
+    Return a ZOCallable that looks like bounces for large values.
     
     Params:
     ---
@@ -80,6 +80,18 @@ def bounce(n: int) -> ZOZOCallable:
         return 1 - np.abs(sinc)
     bounce_n = vectorize_ZOCallable(bounce_n)
     return bounce_n
+
+def bounce_in(n: int):
+    """
+    Return a ZOCallable that looks like bounces for small values.
+    
+    Params:
+    ---
+    - n: int >= 0, the number of bounces.
+    """
+
+    bounce_in_n = bounce_out(n)
+    return lambda x:1 - bounce_in_n(1 - x)
 
 def jump(n: int) -> ZOZOCallable:
     """
@@ -102,4 +114,31 @@ def jump(n: int) -> ZOZOCallable:
         raise ValueError(f"{n} is not an acceptable argument for the number of jumps.")
     return lambda x: np.round(x*n)/n
 
-# add https://github.com/semitable/easing-functions/blob/master/easing_functions/easing.py
+exp_in = normalize_ZOCallable(np.exp)
+exp_out = normalize_ZOCallable(lambda t: 1 - (1 - np.exp(t)))
+
+
+# functions taken from https://github.com/semitable/easing-functions/blob/master/easing_functions/easing.py
+
+sin_in = lambda x: np.sin((x - 1) * np.pi / 2) + 1
+sin_out = lambda x: np.sin(x * np.pi / 2)
+sin_in_out = lambda x: 0.5 * (1 - np.cos(x * np.pi))
+
+circular_in = lambda x: 1 - root_in(1 - square_out(x))
+circular_out = lambda x: np.sqrt((2 - x) * x)
+circular_in_out = vectorize_ZOCallable(lambda x: 0.5 * (np.sqrt(-((2 * x) - 3) * ((2 * x) - 1)) + 1) if x > 0.5 else 0.5 * (1 - np.sqrt(1 - 4 * np.pow(x, 2))))
+
+elastic_in = lambda x: np.sin(13 * np.pi / 2 * x)  / np.pow(2, 10 * (1 - x))
+elastic_out = lambda x: np.sin(-13 * np.pi / 2 * (x + 1)) * np.pow(2, -10 * x) + 1
+elastic_in_out = vectorize_ZOCallable(
+    lambda x: (
+        0.5 * np.sin(13 * np.pi / 2 * (2 * x)) * np.pow(2, 10 * ((2 * x) - 1))
+    ) if x< 0.5 else (
+        0.5 * ( np.sin(-13 * np.pi / 2 * ((2 * x - 1) + 1)) * np.pow(2, -10 * (2 * x - 1)) + 2)
+    )
+)
+
+back_in = lambda x: np.pow(x, 3) - x * np.sin(x * np.pi)
+back_out = lambda x: 1 - back_in(1 - x)
+back_in_out = vectorize_ZOCallable(lambda x: 0.5*back_in(2*x) if x < 0.5 else 0.5*(1- back_in(1 - 2*x)))
+

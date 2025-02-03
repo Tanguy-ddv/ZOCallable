@@ -45,19 +45,25 @@ class TestZOCallable(unittest.TestCase):
         funcs = [linear, square_in, square_out, square_in_out, root_in, root_out]
         for i, func in enumerate(funcs):
             self.assertTrue(verify_ZOCallable(func, 3), f"The {i+1}-th function of the basic list should be a ZOCallable.")
-            self.assertTrue(verify_ZOZOCallable(func, 3), f"The {i+1}-th function of the basic list should be a ZOCallable.")
+            self.assertTrue(verify_ZOZOCallable(func, 3), f"The {i+1}-th function of the basic list should be a ZOZOCallable.")
         from ZOCallable.functions import power_in, power_in_out, power_out
         funcs = sum([[power_in(i), power_out(i), power_in_out(i)] for i in range(3, 8)], [])
         for i, func in enumerate(funcs):
             self.assertTrue(verify_ZOCallable(func, 3), f"The power_{i%3}({i//3 + 3} function should be a ZOCallable.")
-            self.assertTrue(verify_ZOZOCallable(func, 3), f"The power_{i%3}({i//3 + 3} function should be a ZOCallable.")
+            self.assertTrue(verify_ZOZOCallable(func, 3), f"The power_{i%3}({i//3 + 3} function should be a ZOZOCallable.")
         from ZOCallable.functions import ease, ease_in, ease_in_out, ease_out
         funcs = [ease, ease_in, ease_in_out, ease_out]
         for i, func in enumerate(funcs):
             self.assertTrue(verify_ZOCallable(func, 3), f"The {i+1}-th function of the ease list should be a ZOCallable.")
-            self.assertTrue(verify_ZOZOCallable(func, 3), f"The {i+1}-th function of the ease list should be a ZOCallable.")
-        from ZOCallable.functions import jump, bounce
-        funcs = sum([[jump(i), bounce(i)] for i in range(3, 8)], [])
+            self.assertTrue(verify_ZOZOCallable(func, 3), f"The {i+1}-th function of the ease list should be a ZOZOCallable.")
+        from ZOCallable.functions import jump, bounce_in, bounce_out
+        funcs = sum([[jump(i), bounce_in(i), bounce_out(i)] for i in range(3, 8)], [])
         for i, func in enumerate(funcs):
-            self.assertTrue(verify_ZOCallable(func, 3), f"The special{i%2}({i//2} function should be a ZOCallable.")
-            self.assertTrue(verify_ZOZOCallable(func, 3), f"The special{i%2}({i//2} function should be a ZOCallable.") 
+            self.assertTrue(verify_ZOCallable(func, 3), f"The special{i%3}({i//3} function should be a ZOCallable.")
+            self.assertTrue(verify_ZOZOCallable(func, 3), f"The special{i%3}({i//3} function should be a ZOZOCallable.")
+        from ZOCallable.functions import exp_in, exp_out, circular_in, circular_in_out, circular_out, back_in, back_in_out, back_out, elastic_in, elastic_in_out, elastic_out
+        funcs = [exp_in, exp_out, circular_in, circular_in_out, circular_out, back_in, back_in_out, back_out, elastic_in, elastic_in_out, elastic_out]
+        for i, func in enumerate(funcs):
+            self.assertTrue(verify_ZOCallable(func, 3), f"The {i+1}-th function of the extra list should be a ZOCallable.")
+            if i < 5: # the back ad elastic functions are supposed to not be ZOZOC
+                self.assertTrue(verify_ZOZOCallable(func, 3), f"The {i+1}-th function of the extra list should be a ZOZOCallable.")    
