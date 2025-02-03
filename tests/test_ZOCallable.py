@@ -66,4 +66,11 @@ class TestZOCallable(unittest.TestCase):
         for i, func in enumerate(funcs):
             self.assertTrue(verify_ZOCallable(func, 3), f"The {i+1}-th function of the extra list should be a ZOCallable.")
             if i < 5: # the back ad elastic functions are supposed to not be ZOZOC
-                self.assertTrue(verify_ZOZOCallable(func, 3), f"The {i+1}-th function of the extra list should be a ZOZOCallable.")    
+                self.assertTrue(verify_ZOZOCallable(func, 3), f"The {i+1}-th function of the extra list should be a ZOZOCallable.")
+        
+    def test_plots(self):
+        from ZOCallable.functions import circular_in, circular_in_out, circular_out, elastic_in, elastic_in_out, elastic_out
+        from ZOCallable.plot import plot_ZOCallable, plot_ZOZOCallable
+        plot_ZOZOCallable(circular_in, circular_in_out, circular_out, vectorized=True, save_path="ZOZOC.png", labels=["Circular_in", "Circular_in_out", "Circular_out"])
+        plot_ZOCallable(elastic_in, elastic_in_out, elastic_out, vectorized=True, save_path="ZOC.png", labels=["Elastic_in", "Elastic_in_out", "Elastic_out"])
+
