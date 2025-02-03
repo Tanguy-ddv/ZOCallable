@@ -20,10 +20,9 @@ def plot_ZOCallable(*func: tuple[ZOCallable], vectorized = True, save_path: str 
     - vectorized: bool, specify whether the functions are vectorized or not.
     - save_path: str = "", if specified, the plot isn't showed but saved
 
-    The functions are plotted for x from 0 to 1, y = 0, y = 1 and x = y are plotted in the background.
+    The functions are plotted for x from 0 to 1, x = y is plotted in the background.
     """
     plt.figure()
-    plt.hlines([0, 1], 0, 1, colors='k', linestyles='--', label='')
     plt.plot([0, 1], [0, 1], c='#aaa', linestyle='--', label='')
     plt.scatter([0, 1], [0, 1], marker='o', label='')
     x = np.linspace(0, 1, 101)
@@ -56,11 +55,10 @@ def plot_ZOZOCallable(*func: ZOZOCallable, vectorized = True, save_path: str = "
     - save_path: str = "", if specified, the plot isn't showed but saved
 
 
-    The functions are plotted for x from 0 to 1, y = 0, y = 1 and x = y are plotted in the background.
+    The functions are plotted for x from 0 to 1, x = y is plotted in the background.
     As ZOZOCallables should range in [0, 1], the ylim is fixed to [0, 1].
     """
     plt.figure()
-    plt.hlines([0, 1], 0, 1, colors='k', linestyles='--')
     plt.plot([0, 1], [0, 1], c='#aaa', linestyle='--')
     plt.scatter([0, 1], [0, 1], marker='o')
     x = np.linspace(0, 1, 101)
