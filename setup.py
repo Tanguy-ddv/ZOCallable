@@ -4,7 +4,7 @@ setup(
     name='ZOCallable',
     author="Tanguy Dugas du Villard",
     author_mail="tanguy.dugas01@gmail.com",
-    version='1.0.0',
+    version='1.0.1',
     description="ZOCallable is a library defining multiple functions f : [0, 1] -> R, and satisfying the condition f(0) = 0 and f(1) = 1. They can be used as transitions.",
     packages=find_packages(),
     install_requires=[
