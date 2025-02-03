@@ -156,7 +156,7 @@ sin_out = lambda x: np.sin(x * np.pi / 2)
 sin_in_out = lambda x: 0.5 * (1 - np.cos(x * np.pi))
 
 circular_in = lambda x: 1 - root_in(1 - square_out(x))
-circular_out = lambda x: np.sqrt((2 - x) * x)
+circular_out = lambda x: 1 - root_out(1 - square_in(x))
 circular_in_out = vectorize_ZOCallable(lambda x: 0.5 * (np.sqrt(-((2 * x) - 3) * ((2 * x) - 1)) + 1) if x > 0.5 else 0.5 * (1 - np.sqrt(1 - 4 * np.pow(x, 2))))
 
 elastic_in = lambda x: np.sin(13 * np.pi / 2 * x)  / np.pow(2, 10 * (1 - x))
