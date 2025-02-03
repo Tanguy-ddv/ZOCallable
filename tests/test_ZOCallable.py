@@ -1,5 +1,5 @@
-from ZOCallable.ZOCallable import verify_ZOCallable
-from ZOCallable.ZOZOCallable import verify_ZOZOCallable
+from ZOCallable.ZOCallable import verify_ZOCallable, verify_ZOZOCallable, ZOZOCallable, ZOCallable
+from typing import Callable
 import unittest
 class TestZOCallable(unittest.TestCase):
 
@@ -40,7 +40,6 @@ class TestZOCallable(unittest.TestCase):
         self.assertFalse(verify_ZOZOCallable(func, 3), "lambda x,y: x + y shouldn't be a ZOZOCallable as it has 2 parameters.")
 
     def test_functions(self):
-
         from ZOCallable.functions import linear, square_in, square_in_out, square_out, root_in, root_out
         funcs = [linear, square_in, square_out, square_in_out, root_in, root_out]
         for i, func in enumerate(funcs):
@@ -74,3 +73,9 @@ class TestZOCallable(unittest.TestCase):
         plot_ZOZOCallable(circular_in, circular_in_out, circular_out, vectorized=True, save_path="ZOZOC.png", labels=["Circular_in", "Circular_in_out", "Circular_out"])
         plot_ZOCallable(elastic_in, elastic_in_out, elastic_out, vectorized=True, save_path="ZOC.png", labels=["Elastic_in", "Elastic_in_out", "Elastic_out"])
 
+    def test_metaclass(self):
+        self.assertTrue(issubclass(ZOZOCallable, ZOCallable), "ZOZOCallable should be a subclass of ZOCallble.")
+        self.assertTrue(issubclass(ZOCallable, Callable), "ZOallable should be a subclass of Callable.")
+        self.assertTrue(issubclass(ZOZOCallable, Callable), "ZOZOCallable should be a subclass of ZOCallble.")
+        self.assertFalse(issubclass(int, ZOCallable), "int shouldn't be a subclass of ZOCallable.")
+    

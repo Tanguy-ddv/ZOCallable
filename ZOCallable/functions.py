@@ -1,7 +1,6 @@
 """The functions submodule contains some ZOCs and ZOZOCs."""
 import numpy as np
-from .ZOCallable import ZOCallable, normalize_ZOCallable, vectorize_ZOCallable
-from .ZOZOCallable import ZOZOCallable
+from .ZOCallable import ZOCallable, ZOZOCallable, normalize_ZOCallable, vectorize_ZOCallable
 
 linear = lambda x:x
 
@@ -61,6 +60,9 @@ def cubic_bezier(x1, y1, x2, y2, precision: float = 2**(-8)) -> ZOCallable:
     y0 = 0
     x3 = 1
     y3 = 1
+    if x1 < 0 or x1 > 1 or x2 < 0 or x2 > 1:
+        raise ValueError(f"x1 and x2 must be in [0, 1], got {x1} and {x2}")
+
     bezier_curve_x = lambda t: (1.-t)**3 * x0 + 3*(1.-t)**2*t * x1 + 3*(1.-t)*t**2 * x2 + t**3 * x3
     bezier_curve_y = lambda t: (1.-t)**3 * y0 + 3*(1.-t)**2*t * y1 + 3*(1.-t)*t**2 * y2 + t**3 * y3
     

@@ -10,5 +10,4 @@ For both cases, a function called `verify_ZO(ZO)Callable` can be used to verify 
 Multiple functions are defined in the submodule _ZOCallable.functions_, most of them are ZOZOCallables, all of them are ZOCallables. 
 """
 from ZOCallable.ZOCallable import ZOCallable, verify_ZOCallable, normalize_ZOCallable, vectorize_ZOCallable
-from ZOCallable.ZOZOCallable import ZOZOCallable, verify_ZOZOCallable
 from ZOCallable import functions, plot

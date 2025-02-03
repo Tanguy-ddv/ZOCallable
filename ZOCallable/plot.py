@@ -7,8 +7,7 @@ except ImportError:
 
 import numpy as np
 from typing import Sequence
-from ZOCallable.ZOCallable import ZOCallable
-from ZOCallable.ZOZOCallable import ZOZOCallable
+from ZOCallable.ZOCallable import ZOCallable, ZOZOCallable
 
 def plot_ZOCallable(*func: tuple[ZOCallable], vectorized = True, save_path: str = "", labels: Sequence[str] = []):
     """

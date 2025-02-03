@@ -5,15 +5,17 @@ import numpy as np
 
 class _ZOCMetaclass(type):
     """
-    The Metaclass used to define a ZOCallable.
+    The Metaclass used to define a ZOZOCallable.
     Things are done like this to allow the check isinstance(func, ZOCallable) to return
     True if the function satisfies the conditions, even if it is not an instance of the class
     but a function or a lambda function.
     """
 
-    rounding: int = 5 # use to allow a little error on the check of f(0) = 0 and f(1) = 1
+    rounding: int = 5
+    test_vectorization: bool = False,
+    test_values = np.linspace(0 + 1/101, 1 - 1/101, 99)
 
-    def __instancecheck__(self, func) -> bool:
+    def __instancecheck__(cls, func) -> bool:
         if not (
             isinstance(func, Callable) #The func must be a callable
             and len(inspect.signature(func).parameters.keys()) == 1 # the func must have one parameter
@@ -28,7 +30,32 @@ class _ZOCMetaclass(type):
             except ValueError:
                 return False # We need to be sure the output is a float
          # The function must satisfy f(0) = 0 and f(1) = 1, it checkes also if the output is a number.
-        return round(f0, _ZOCMetaclass.rounding) == 0 and round(f1, _ZOCMetaclass.rounding) == 1
+        if not (round(f0, _ZOCMetaclass.rounding) == 0 and round(f1, _ZOCMetaclass.rounding) == 1):
+            return False
+        if cls is ZOCallable: # No further check is the asked class is ZOCallable
+            return True
+        if _ZOCMetaclass.test_vectorization: # If we test the vectorization, we verify the output is an array of float
+            outputs = func(_ZOCMetaclass.test_values)
+            if not isinstance(outputs, np.ndarray) or not isinstance(outputs[0], float):
+                return False
+            # And we verify all these floats are in [0, 1]
+            return np.all(0 <= np.round(outputs, _ZOCMetaclass.rounding) <= 1)
+        else:
+            # If we don't care about vectorization, we still test the range of the function.
+            return all(0 <= round(float(func(t)), _ZOCMetaclass.rounding) <= 1 for t in _ZOCMetaclass.test_values)
+    
+    def __subclasscheck__(cls, subcls):
+        # Return True if we ask if ZOZOCallable is a subclass of ZOCallable, that's it.
+        return cls is ZOCallable and subcls is ZOZOCallable
+
+class ZOZOCallable(metaclass=_ZOCMetaclass):
+    """
+    The ZOZOCallable isn't meant to be instanciated.
+    This class is only a type hint for functions f with
+    f(0) = 0, f(1) = 1 and f : [0, 1] -> [0, 1].
+    """
+
+    def __call__(self, x: float) -> float: ...
 
 class ZOCallable(metaclass=_ZOCMetaclass):
     """
@@ -89,3 +116,29 @@ def vectorize_ZOCallable(unvectorized_ZOC: Callable[[float], float]):
     """
     vectorized_ZOC = np.vectorize(unvectorized_ZOC)
     return lambda x: vectorized_ZOC(x)
+
+def verify_ZOZOCallable(ZOC, rounding: int=5, test_vectorizaiton: bool = False, points: int = 101):
+    """
+    Verify if the provided function is a ZOZOCallable.
+
+    Params:
+    ----
+    - rounding: int = 5, the number of significative numbers that are kept to proceed to the float comparisons.
+    This is used to allow the calculations errors of python.
+    - test_vectorization: bool = False. If true, the function is also tested if it is vectorized.
+    - points: int = 101, >= 3 the number of points used to test the assertion 0 <= f(x) <= 1.
+
+    Returns:
+    ---
+    - is_ZOZOC: bool, whether the provided function is a ZOZOCallable.
+
+    Raises:
+    ----
+    - ValueError: if points is <= 2.
+    """
+    if points <= 2:
+        raise ValueError(f"{points} points are not enough.")
+    _ZOCMetaclass.rounding = rounding
+    _ZOCMetaclass.test_vectorization = test_vectorizaiton
+    _ZOCMetaclass.test_values = np.linspace(0 + 1/points, 1 - 1/points, points - 2)
+    return isinstance(ZOC, ZOZOCallable)
