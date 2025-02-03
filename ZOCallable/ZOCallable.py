@@ -42,9 +42,11 @@ def verify_step_by_step(ZOC):
 
 def normalize_ZOCallable(unnormalized_callable: Callable[[float], float]):
     """Normalize a function to be a ZOCCallable."""
-    if unnormalized_callable(1) == 0:
+    u1 = unnormalized_callable(1)
+    if u1 == 0:
         raise ValueError("This function cannot be normalized as a ZOCallable.")
-    return lambda t: (unnormalized_callable(t) - unnormalized_callable(0)) / unnormalized_callable(1)
+    u0 = unnormalized_callable(0)
+    return lambda t: (unnormalized_callable(t) - u0) / (u1 - u0)
 
 def vectorize_ZOCallable(unvectorized_ZOC: Callable[[float], float]):
     vectorized_ZOC = np.vectorize(unvectorized_ZOC)
