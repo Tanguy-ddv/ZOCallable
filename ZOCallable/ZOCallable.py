@@ -39,7 +39,7 @@ class _ZOCMetaclass(type):
             if not isinstance(outputs, np.ndarray) or not isinstance(outputs[0], float):
                 return False
             # And we verify all these floats are in [0, 1]
-            return np.all(0 <= np.round(outputs, _ZOCMetaclass.rounding) <= 1)
+            return (0 <= np.round(outputs, _ZOCMetaclass.rounding)).all() and  (np.round(outputs, _ZOCMetaclass.rounding) <= 1).all()
         else:
             # If we don't care about vectorization, we still test the range of the function.
             return all(0 <= round(float(func(t)), _ZOCMetaclass.rounding) <= 1 for t in _ZOCMetaclass.test_values)
